@@ -8,19 +8,17 @@
 
 Name:           %{?scl_prefix}apache-%{short_name}
 Version:        1.8.3
-Release:        16%{?dist}
+Release:        18%{?dist}
 Summary:        Java utility methods for accessing and modifying the properties of arbitrary JavaBeans
 License:        ASL 2.0
 URL:            http://commons.apache.org/%{base_name}
 BuildArch:      noarch
 Source0:        http://archive.apache.org/dist/commons/%{base_name}/source/%{short_name}-%{version}-src.tar.gz
 
-BuildRequires:  maven-local
+BuildRequires:  maven30-maven-local
 BuildRequires:  %{?scl_prefix}mvn(commons-collections:commons-collections)
 BuildRequires:  %{?scl_prefix}mvn(commons-logging:commons-logging)
-BuildRequires:  mvn(org.apache.commons:commons-parent) >= 26-7
-
-%{?scl:Requires: %scl_runtime}
+BuildRequires:  maven30-mvn(org.apache.commons:commons-parent) >= 26-7
 
 %description
 The scope of this package is to create a package of Java utility methods
@@ -35,7 +33,7 @@ Summary:        Javadoc for %{name}
 %{summary}.
 
 %prep
-%{?scl:scl enable %{scl} - << "EOF"}
+%{?scl:scl enable maven30 %{scl} - << "EOF"}
 %setup -q -n %{short_name}-%{version}-src
 sed -i 's/\r//' *.txt
 
@@ -49,13 +47,13 @@ sed -i 's/\r//' *.txt
 %{?scl:EOF}
 
 %build
-%{?scl:scl enable %{scl} - << "EOF"}
+%{?scl:scl enable maven30 %{scl} - << "EOF"}
 # Some tests fail in Koji
 %mvn_build -f
 %{?scl:EOF}
 
 %install
-%{?scl:scl enable %{scl} - << "EOF"}
+%{?scl:scl enable maven30 %{scl} - << "EOF"}
 %mvn_install
 %{?scl:EOF}
 
@@ -67,6 +65,12 @@ sed -i 's/\r//' *.txt
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Wed Jun 18 2014 Severin Gehwolf <sgehwolf@redhat.com> - 1.8.3-18
+- Rebuild so as to fix wrongly generated requires.
+
+* Tue Jun 17 2014 Severin Gehwolf <sgehwolf@redhat.com> - 1.8.3-17
+- Build against maven30 collection.
+
 * Mon Jan 20 2014 Omair Majid <omajid@redhat.com> - 1.8.3-16
 - Rebuild in order to fix osgi()-style provides.
 - Resolves: RHBZ#1054813
